@@ -1,1 +1,2 @@
 amaascore
+yahoo-finance

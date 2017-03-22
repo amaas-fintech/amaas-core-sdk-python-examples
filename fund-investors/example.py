@@ -1,22 +1,25 @@
+""" An example of setting up a fund with investors. """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from datetime import date
-from dateutil.relativedelta import relativedelta
 from decimal import Decimal
+import logging
+import logging.config
 import random
 
 from amaascore.assets.equity import Equity
 from amaascore.assets.interface import AssetsInterface
 from amaascore.books.book import Book
 from amaascore.books.interface import BooksInterface
+from amaascore.config import DEFAULT_LOGGING
 from amaascore.parties.fund import Fund
 from amaascore.parties.individual import Individual
 from amaascore.parties.interface import PartiesInterface
 from amaascore.transactions.interface import TransactionsInterface
 from amaascore.transactions.transaction import Transaction
+from dateutil.relativedelta import relativedelta
 
-import logging
-logging.basicConfig(level=logging.INFO)
+logging.config.dictConfig(DEFAULT_LOGGING)
 
 # Create the interfaces
 assets_interface = AssetsInterface()
@@ -26,6 +29,7 @@ transaction_interface = TransactionsInterface()
 
 
 def create_parties(asset_manager_id, fund_id, trader_id, investor_id, base_currency):
+    """ Create the parties used in this example: a fund, a trader and an investor. """
     fund = Fund(asset_manager_id=asset_manager_id, party_id=fund_id, base_currency=base_currency)
     parties_interface.new(fund)
     trader = Individual(asset_manager_id=asset_manager_id, party_id=trader_id)
@@ -36,6 +40,7 @@ def create_parties(asset_manager_id, fund_id, trader_id, investor_id, base_curre
 
 
 def create_books(asset_manager_id, fund_id, trader_id, investor_id, issuance_id):
+    """ Create the books used in this example: a fund book, an investor book and an issuance book. """
     fund_book = Book(asset_manager_id=asset_manager_id, book_id=fund_id, party_id=fund_id, owner_id=trader_id)
     books_interface.new(fund_book)
 
@@ -49,8 +54,9 @@ def create_books(asset_manager_id, fund_id, trader_id, investor_id, issuance_id)
 
 
 def main():
+    """ Main example """
     logging.info("--- SETTING UP IDENTIFIERS ---")
-    asset_manager_id = random.randint(1, 2**32-1)
+    asset_manager_id = random.randint(1, 2**31-1)
     fund_id = 'DEMO-FUND'
     trader_id = 'TRADER-JOE'
     investor_id = 'INVESTOR1'

@@ -1,23 +1,28 @@
+""" An example of connecting to Yahoo Finance for market data. """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 from datetime import date
-from dateutil.relativedelta import relativedelta
 from decimal import Decimal
+import logging
+import logging.config
 import random
+
+from dateutil.relativedelta import relativedelta
 from yahoo_finance import Share
 
 from amaascore.assets.interface import AssetsInterface
+from amaascore.config import DEFAULT_LOGGING
 from amaascore.market_data.eod_price import EODPrice
 from amaascore.market_data.interface import MarketDataInterface
 
-import logging
-logging.basicConfig(level=logging.INFO)
+logging.config.dictConfig(DEFAULT_LOGGING)
 
 assets_interface = AssetsInterface()
 market_data_interface = MarketDataInterface()
 
 
 def main():
+    """ Main example """
     logging.info("--- SETTING UP IDENTIFIERS ---")
     asset_manager_id = random.randint(1, 2**31-1)
     business_date = date.today() - relativedelta(days=1)

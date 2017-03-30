@@ -90,3 +90,6 @@ ENV/
 
 # IDEA project settings
 .idea
+
+# VS Code project settings
+.vscode

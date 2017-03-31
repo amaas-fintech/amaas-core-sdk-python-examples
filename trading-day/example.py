@@ -102,7 +102,7 @@ def main():
 
     # Trading Activity
     logging.info("--- BOOKING TRADES ---")
-    logging.info("**BUY HSBC **")
+    logging.info("** BUY HSBC **")
     transaction1 = Transaction(asset_manager_id=asset_manager_id,
                                transaction_id='transaction1',
                                transaction_action='Buy',

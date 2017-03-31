@@ -53,7 +53,8 @@ def create_books(asset_manager_id, asset_manager_party_id, trading_book_id, brok
     trading_book = Book(asset_manager_id=asset_manager_id, book_id=trading_book_id, party_id=asset_manager_party_id)
     books_interface.new(trading_book)
 
-    broker_book = Book(asset_manager_id=asset_manager_id, book_id=broker_id, party_id=broker_id)
+    broker_book = Book(asset_manager_id=asset_manager_id, book_id=broker_id, party_id=broker_id,
+                       book_type='Counterparty')
     books_interface.new(broker_book)
 
     return trading_book, broker_book
@@ -108,8 +109,8 @@ def main():
     # TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
     transaction_asset_fields = ['asset_manager_id', 'asset_id', 'asset_status', 'asset_class', 'asset_type', 'fungible']
     singtel_json = singtel.to_json()
-    transaction_hsbc_json = {attr: singtel_json.get(attr) for attr in transaction_asset_fields}
-    transaction_interface.upsert_transaction_asset(transaction_asset_json=transaction_hsbc_json)
+    transaction_singtel_json = {attr: singtel_json.get(attr) for attr in transaction_asset_fields}
+    transaction_interface.upsert_transaction_asset(transaction_asset_json=transaction_singtel_json)
     transaction_book_fields = ['asset_manager_id', 'book_id', 'party_id', 'book_status', 'description']
     trading_json = trading_book.to_json()
     trading_book_json = {attr: trading_json.get(attr) for attr in transaction_book_fields}
@@ -121,7 +122,7 @@ def main():
 
     # Trading Activity
     logging.info("--- BOOKING TRADES ---")
-    logging.info("**BUY SINGTEL **")
+    logging.info("** BUY SINGTEL **")
     book_transaction(asset_manager_id=asset_manager_id, asset_book_id=trading_book.book_id,
                      counterparty_book_id=broker_book.book_id, asset=singtel,
                      transaction_date=today, settlement_date=overmorrow,

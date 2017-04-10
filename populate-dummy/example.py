@@ -1,6 +1,7 @@
 """ An example of how to setup a whole set of transactions for testing purposes. """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from amaasutils.random_utils import random_string
 from datetime import date
 from decimal import Decimal
 import logging
@@ -17,7 +18,6 @@ from amaascore.parties.broker import Broker
 from amaascore.parties.company import Company
 from amaascore.parties.individual import Individual
 from amaascore.parties.interface import PartiesInterface
-from amaascore.tools.helpers import random_string
 from amaascore.transactions.interface import TransactionsInterface
 from amaascore.transactions.transaction import Transaction
 from dateutil.relativedelta import relativedelta
@@ -71,8 +71,7 @@ def create_transaction(asset_manager_id, transaction_id, asset_book_id, cpty_boo
                               counterparty_book_id=cpty_book_id, asset_id=asset_id,
                               transaction_currency=random.choice(currencies),
                               transaction_date=transaction_date, settlement_date=settlement_date, quantity=quantity,
-                              price=price
-                               )
+                              price=price)
     transaction_interface.new(transaction)
 
 

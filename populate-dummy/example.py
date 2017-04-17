@@ -91,23 +91,13 @@ def main():
 
     # Create the books
     logging.info("--- SETTING UP BOOKS ---")
-    transaction_book_fields = ['asset_manager_id', 'book_id', 'party_id', 'book_status', 'description']
     book_ids = ['BOOK' + str(i+1) for i in range(no_of_books)]
     for book_id in book_ids:
-        book = create_book(asset_manager_id=asset_manager_id, book_id=book_id, party_id=asset_manager_party_id,
-                           owner_id=random.choice([trader[0] for trader in traders]))
-        ### TEMP TEMP TEMP  ###
-        book_json = book.to_json()
-        trading_book_json = {attr: book_json.get(attr) for attr in transaction_book_fields}
-        transaction_interface.upsert_transaction_book(transaction_book_json=trading_book_json)
-
+        create_book(asset_manager_id=asset_manager_id, book_id=book_id, party_id=asset_manager_party_id,
+                    owner_id=random.choice([trader[0] for trader in traders]))
 
     for broker in brokers:
-        book = create_book(asset_manager_id=asset_manager_id, book_id=broker[0], party_id=broker[0])
-        ### TEMP TEMP TEMP  ###
-        book_json = book.to_json()
-        trading_book_json = {attr: book_json.get(attr) for attr in transaction_book_fields}
-        transaction_interface.upsert_transaction_book(transaction_book_json=trading_book_json)
+        create_book(asset_manager_id=asset_manager_id, book_id=broker[0], party_id=broker[0])
 
     # Create parties
     logging.info("--- SETTING UP PARTIES ---")
@@ -121,15 +111,10 @@ def main():
         parties_interface.new(broker)
 
     # Create equities
-    transaction_asset_fields = ['asset_manager_id', 'asset_id', 'asset_status', 'asset_class', 'asset_type', 'fungible']
     logging.info("--- SETTING UP EQUITIES ---")
     for i in range(no_of_equities):
         asset_id = 'EQ' + str(i+1)
-        asset = create_equity(asset_manager_id=asset_manager_id, asset_id=asset_id)
-        ### TEMP TEMP TEMP  ###
-        asset_json = asset.to_json()
-        transaction_asset_json = {attr: asset_json.get(attr) for attr in transaction_asset_fields}
-        transaction_interface.upsert_transaction_asset(transaction_asset_json=transaction_asset_json)
+        create_equity(asset_manager_id=asset_manager_id, asset_id=asset_id)
 
     # Trading Activity
     logging.info("--- BOOKING TRADES ---")

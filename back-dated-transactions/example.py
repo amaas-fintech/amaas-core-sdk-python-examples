@@ -106,19 +106,6 @@ def main():
     logging.info("--- SETTING UP ASSETS ---")
     singtel = create_assets(asset_manager_id=asset_manager_id)
 
-    # TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
-    transaction_asset_fields = ['asset_manager_id', 'asset_id', 'asset_status', 'asset_class', 'asset_type', 'fungible']
-    singtel_json = singtel.to_json()
-    transaction_singtel_json = {attr: singtel_json.get(attr) for attr in transaction_asset_fields}
-    transaction_interface.upsert_transaction_asset(transaction_asset_json=transaction_singtel_json)
-    transaction_book_fields = ['asset_manager_id', 'book_id', 'party_id', 'book_status', 'description']
-    trading_json = trading_book.to_json()
-    trading_book_json = {attr: trading_json.get(attr) for attr in transaction_book_fields}
-    transaction_interface.upsert_transaction_book(transaction_book_json=trading_book_json)
-    broker_json = broker_book.to_json()
-    broker_book_json = {attr: broker_json.get(attr) for attr in transaction_book_fields}
-    transaction_interface.upsert_transaction_book(transaction_book_json=broker_book_json)
-    # ENDTEMP ENDTEMP ENDTEMP ENDTEMP ENDTEMP ENDTEMP
 
     # Trading Activity
     logging.info("--- BOOKING TRADES ---")

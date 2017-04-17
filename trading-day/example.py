@@ -47,7 +47,6 @@ def create_parties(asset_manager_id, asset_manager_party_id, broker_id, base_cur
     parties_interface.new(asset_manager)
     broker = Broker(asset_manager_id=asset_manager_id, party_id=broker_id)
     parties_interface.new(broker)
-    return asset_manager, broker
 
 
 def create_books(asset_manager_id, asset_manager_party_id, trading_book_id, broker_id):
@@ -56,7 +55,6 @@ def create_books(asset_manager_id, asset_manager_party_id, trading_book_id, brok
 
     broker_book = Book(asset_manager_id=asset_manager_id, book_id=broker_id, party_id=broker_id)
     books_interface.new(broker_book)
-
     return trading_book, broker_book
 
 
@@ -78,27 +76,13 @@ def main():
 
     # Create parties - obviously this normally would be a one-time setup thing
     logging.info("--- SETTING UP PARTIES ---")
-    asset_manager, broker = create_parties(asset_manager_id=asset_manager_id,
-                                           asset_manager_party_id=asset_manager_party_id,
-                                           broker_id=broker_id, base_currency=currency)
+    create_parties(asset_manager_id=asset_manager_id,
+                   asset_manager_party_id=asset_manager_party_id,
+                   broker_id=broker_id, base_currency=currency)
 
     # Create assets - things like HSBC would be centrally setup with AMID 0
     logging.info("--- SETTING UP ASSETS ---")
     hsbc = create_assets(asset_manager_id=asset_manager_id)
-
-    # TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
-    transaction_asset_fields = ['asset_manager_id', 'asset_id', 'asset_status', 'asset_class', 'asset_type', 'fungible']
-    hsbc_json = hsbc.to_json()
-    transaction_hsbc_json = {attr: hsbc_json.get(attr) for attr in transaction_asset_fields}
-    transaction_interface.upsert_transaction_asset(transaction_asset_json=transaction_hsbc_json)
-    transaction_book_fields = ['asset_manager_id', 'book_id', 'party_id', 'book_status', 'description']
-    trading_json = trading_book.to_json()
-    trading_book_json = {attr: trading_json.get(attr) for attr in transaction_book_fields}
-    transaction_interface.upsert_transaction_book(transaction_book_json=trading_book_json)
-    broker_json = broker_book.to_json()
-    broker_book_json = {attr: broker_json.get(attr) for attr in transaction_book_fields}
-    transaction_interface.upsert_transaction_book(transaction_book_json=broker_book_json)
-    # ENDTEMP ENDTEMP ENDTEMP ENDTEMP ENDTEMP ENDTEMP
 
     # Trading Activity
     logging.info("--- BOOKING TRADES ---")

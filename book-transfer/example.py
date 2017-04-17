@@ -88,18 +88,6 @@ def main():
     logging.info("--- SETTING UP ASSETS ---")
     jgb = create_jgb(asset_manager_id=asset_manager_id)
 
-    # TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
-    transaction_asset_fields = ['asset_manager_id', 'asset_id', 'asset_status', 'asset_class', 'asset_type', 'fungible']
-    jgb_json = jgb.to_json()
-    transaction_jgb_json = {attr: jgb_json.get(attr) for attr in transaction_asset_fields}
-    transaction_interface.upsert_transaction_asset(transaction_asset_json=transaction_jgb_json)
-    transaction_book_fields = ['asset_manager_id', 'book_id', 'party_id', 'book_status', 'description']
-    for book in [book_one, book_two, wash_book, broker_book]:
-        book_json = book.to_json()
-        transaction_book_json = {attr: book_json.get(attr) for attr in transaction_book_fields}
-        transaction_interface.upsert_transaction_book(transaction_book_json=transaction_book_json)
-    # ENDTEMP ENDTEMP ENDTEMP ENDTEMP ENDTEMP ENDTEMP
-
     # Trading Activity
     logging.info("--- BOOKING TRADES ---")
     logging.info("** BUY JGB **")

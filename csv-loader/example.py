@@ -149,21 +149,6 @@ def main():
     for equity in equities:
         assets_interface.new(equity)
 
-    #### TEMP TEMP TEMP TEMP ####
-    # This is temporary code to write into the Transaction cache.  This will be removed soon #
-    transaction_asset_fields = ['asset_manager_id', 'asset_id', 'asset_status', 'asset_class', 'asset_type', 'fungible']
-    transaction_book_fields = ['asset_manager_id', 'book_id', 'party_id', 'book_status', 'description']
-    for book in books:
-        book_json = book.to_json()
-        trading_book_json = {attr: book_json.get(attr) for attr in transaction_book_fields}
-        transaction_interface.upsert_transaction_book(transaction_book_json=trading_book_json)
-    for asset in assets:
-        asset_json = asset.to_json()
-        transaction_asset_json = {attr: asset_json.get(attr) for attr in transaction_asset_fields}
-        transaction_interface.upsert_transaction_asset(transaction_asset_json=transaction_asset_json)
-
-    #### END TEMP END TEMP END TEMP END TEMP ####
-
     logging.info("--- READING TRANSACTIONS CSV AND CREATING ---")
     transactions = csv_filename_to_objects(filename=transactions_filename, json_handler=json_to_transaction)
     for transaction in transactions:

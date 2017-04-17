@@ -36,7 +36,6 @@ def create_parties(asset_manager_id, fund_id, trader_id, investor_id, base_curre
     parties_interface.new(trader)
     investor = Individual(asset_manager_id=asset_manager_id, party_id=investor_id)
     parties_interface.new(investor)
-    return fund, investor, trader
 
 
 def create_books(asset_manager_id, fund_id, trader_id, investor_id, issuance_id):
@@ -49,8 +48,6 @@ def create_books(asset_manager_id, fund_id, trader_id, investor_id, issuance_id)
 
     issuance_book = Book(asset_manager_id=asset_manager_id, book_id=issuance_id, party_id=fund_id)
     books_interface.new(issuance_book)
-
-    return fund_book, investor_book, issuance_book
 
 
 def main():
@@ -67,38 +64,20 @@ def main():
 
     # Create parties
     logging.info("--- SETTING UP PARTIES ---")
-    fund, trader, investor = create_parties(asset_manager_id=asset_manager_id, fund_id=fund_id, trader_id=trader_id,
-                                            investor_id=investor_id, base_currency=currency)
+    create_parties(asset_manager_id=asset_manager_id, fund_id=fund_id, trader_id=trader_id,
+                   investor_id=investor_id, base_currency=currency)
 
     # Create the books
     logging.info("--- SETTING UP BOOKS ---")
-    fund_book, investor_book, issuance_book = create_books(asset_manager_id=asset_manager_id, fund_id=fund_id,
-                                                           trader_id=trader_id, investor_id=investor_id,
-                                                           issuance_id=issuance_id)
+    create_books(asset_manager_id=asset_manager_id, fund_id=fund_id, trader_id=trader_id,
+                 investor_id=investor_id, issuance_id=issuance_id)
+
     logging.info("--- SETTING UP FUND EQUITY ---")
     asset = Equity(asset_manager_id=asset_manager_id,
                    asset_id=fund_id,
                    asset_issuer_id=fund_id,
                    currency=currency)
     assets_interface.new(asset)
-
-
-    # TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
-    transaction_asset_fields = ['asset_manager_id', 'asset_id', 'asset_status', 'asset_class', 'asset_type', 'fungible']
-    asset_json = asset.to_json()
-    transaction_asset_json = {attr: asset_json.get(attr) for attr in transaction_asset_fields}
-    transaction_interface.upsert_transaction_asset(transaction_asset_json=transaction_asset_json)
-    transaction_book_fields = ['asset_manager_id', 'book_id', 'party_id', 'book_status', 'description']
-    fund_json = fund_book.to_json()
-    fund_book_json = {attr: fund_json.get(attr) for attr in transaction_book_fields}
-    transaction_interface.upsert_transaction_book(transaction_book_json=fund_book_json)
-    issuance_json = issuance_book.to_json()
-    issuance_book_json = {attr: issuance_json.get(attr) for attr in transaction_book_fields}
-    transaction_interface.upsert_transaction_book(transaction_book_json=issuance_book_json)
-    investor_json = investor_book.to_json()
-    investor_book_json = {attr: investor_json.get(attr) for attr in transaction_book_fields}
-    transaction_interface.upsert_transaction_book(transaction_book_json=investor_book_json)
-    # ENDTEMP ENDTEMP ENDTEMP ENDTEMP ENDTEMP ENDTEMP
 
     logging.info("--- ACQUIRE THE INITIAL FUND EQUITY TRANSACTION  ---")
     initial_transaction = Transaction(asset_manager_id=asset_manager_id,

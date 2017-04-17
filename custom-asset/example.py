@@ -1,6 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from amaascore.assets.asset import Asset
+from amaascore.assets.custom_asset import CustomAsset
 from amaascore.assets.interface import AssetsInterface
 from amaascore.config import DEFAULT_LOGGING
 import json
@@ -10,7 +10,7 @@ import random
 logging.config.dictConfig(DEFAULT_LOGGING)
 
 
-class Pizza(Asset):
+class Pizza(CustomAsset):
 
     def __init__(self, size, asset_id, asset_manager_id, toppings=None, *args, **kwargs):
         self.size = size
